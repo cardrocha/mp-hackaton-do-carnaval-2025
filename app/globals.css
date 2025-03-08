@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+body {
+  font-family: var(--font-roboto);
+}
+
+@theme {
+  --font-roboto: var(--font-roboto);
+  --font-oxanium: var(--font-oxanium);
+}

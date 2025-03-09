@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { PageBlocos } from "@/lib/action";
-import { FeedList } from "./FeedList";
-import { useActionState, useEffect } from "react";
-import { startTransition } from "react";
+import { PageBlocos, SearchBlocos } from '@/lib/action';
+import { FeedList } from './FeedList';
+import { useActionState, useEffect, useState, startTransition } from 'react';
 
 export default function FeedPage() {
+  const [cidade, setCidade] = useState('');
   const [state, fetchPage, pending] = useActionState(PageBlocos, {
     error: false,
     blocos: [],
@@ -15,18 +15,37 @@ export default function FeedPage() {
   useEffect(() => {
     startTransition(() => {
       const formData = new FormData();
-      formData.append("page", "1");
+      formData.append('page', '1');
       fetchPage(formData);
     });
   }, [fetchPage]);
 
+  const fetchCityBlocos = (city: string) => {
+    const formData = new FormData();
+    formData.append("city", city);
+
+    SearchBlocos({ blocos: [] }, formData).then((result) => {
+      if (result && !result.error) {
+        startTransition(() => {
+          fetchPage(formData);
+        });
+      }
+    });
+  };
+
+
+  const handleSearch = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    fetchCityBlocos(cidade);
+  };
+
   const handleNextPage = () => {
     if (state.page === 210) {
-      alert("Seu carnaval chegou ao fim, volte a página anterior!")
+      alert('Seu carnaval chegou ao fim, volte a página anterior!');
     } else {
       startTransition(() => {
         const formData = new FormData();
-        formData.append("page", ((state.page ?? 1) + 1).toString());
+        formData.append('page', ((state.page ?? 1) + 1).toString());
         fetchPage(formData);
       });
     }
@@ -38,16 +57,16 @@ export default function FeedPage() {
     } else {
       startTransition(() => {
         const formData = new FormData();
-        formData.append("page", ((state.page ?? 1) - 1).toString());
+        formData.append('page', ((state.page ?? 1) - 1).toString());
         fetchPage(formData);
       });
     }
   };
 
   return (
-    <article className="w-[610px]">
+    <article className="w-full xl:w-[610px]">
       <h1 className="bg-yellow-500 text-center text-lg font-semibold rounded-t-xl py-1">
-        🎉 Destaque do Carnaval 🎉
+      🎉 Destaque do Carnaval 🎉
       </h1>
       <div className="flex flex-col bg-white text-black p-4 mb-2.5 rounded-b-lg gap-3">
         <div>
@@ -55,18 +74,49 @@ export default function FeedPage() {
           <p className="font-light">⭐ Segue na Série A</p>
         </div>
         <div>
-          <span className="font-semibold">📅 Sexta 28/02</span>
+          <span className="font-semibold"> Sexta 28/02</span>
           <div className="flex items-center justify-between">
             <span className="font-semibold">⏰ 22h - 23h</span>
             <span className="bg-yellow-400 px-3 py-1 rounded-full font-semibold">
               Escola de Samba
             </span>
           </div>
-          <span className="font-semibold">📍 Sambódromo da Marquês de Sapucaí</span>
+          <span className="font-semibold"> Sambódromo da Marquês de Sapucaí</span>
         </div>
       </div>
 
-      <h2 className="font-oxanium text-xl text-center bg-violet-950 text-yellow-400 font-semibol px-2 w-[610px]">
+      <form onSubmit={handleSearch} className="mb-4 flex flex-col gap-2">
+        <select
+          value={cidade}
+          onChange={(e) => setCidade(e.target.value)}
+          className="p-2 border rounded bg-white text-black"
+        >
+          <option value="">Selecione uma cidade</option>
+          {[
+            'São Paulo',
+            'Rio de Janeiro',
+            'Belo Horizonte',
+            'Salvador',
+            'Recife e Olinda',
+            'Brasília',
+            'Fortaleza',
+            'Porto Alegre',
+          ].map((city) => (
+            <option key={city} value={city}>
+              {city}
+            </option>
+          ))}
+        </select>
+        <button
+          type="submit"
+          className="bg-fuchsia-600 text-white px-4 py-2 rounded hover:bg-fuchsia-700 transition"
+          disabled={pending}
+        >
+          {pending ? 'Buscando...' : 'Buscar Blocos'}
+        </button>
+      </form>
+
+      <h2 className="font-oxanium text-xl text-center bg-violet-950 text-yellow-400 font-semibol px-2 w-full xl:w-[610px]">
         Lista de Bloquinhos
       </h2>
 
@@ -94,7 +144,7 @@ export default function FeedPage() {
       ) : state.error ? (
         <p className="text-red-500 text-center mt-5">{state.message}</p>
       ) : (
-        <FeedList bloco={state.blocos} />
+        <FeedList blocos={state.blocos} onUpdateBlocos={fetchPage} />
       )}
     </article>
   );

@@ -27,9 +27,9 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="pt-BR" className={`${roboto.variable} ${oxanium.variable}`}>
-			<body className="bg-amber-100 max-w-xl mx-auto antialiased flex flex-col min-h-screen overflow-y-scroll">
+			<body className="bg-amber-100 max-w-full xl:max-w-xl mx-auto antialiased flex flex-col min-h-screen">
         <Header />
-        <main className="flex flex-1 p-5 xl:p-0">
+        <main className="flex flex-1 p-2">
           {children}
         </main>
       </body>

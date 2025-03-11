@@ -1,12 +1,7 @@
-import type { Bloquinho } from '@/types/types';
+import type { FeedListProps } from '@/types/types';
 import { Clock3, MapPin } from 'lucide-react';
 
-interface FeedListProps {
-  blocos: Bloquinho[];
-  onUpdateBlocos: (formData: FormData) => void;
-}
-
-export function FeedList({ blocos, onUpdateBlocos }: FeedListProps) {
+export function FeedList({ blocos }: FeedListProps) {
   return (
     <div>
       {blocos.length > 0 ? (
@@ -41,7 +36,7 @@ export function FeedList({ blocos, onUpdateBlocos }: FeedListProps) {
           </article>
         ))
       ) : (
-        <p className="text-center text-gray-400">Nenhum bloco encontrado.</p>
+        <p className="text-2xl text-center text-gray-400 mt-10">Nenhum bloco na rua.</p>
       )}
     </div>
   );

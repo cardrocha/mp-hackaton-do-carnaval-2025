@@ -1,24 +1,12 @@
-'use client';
+'use client'
 
-import { PageBlocos, SearchBlocos } from '@/lib/action';
+import { SearchBlocos } from '@/lib/action';
 import { FeedList } from './FeedList';
-import { useActionState, useEffect, useState, startTransition } from 'react';
+import { startTransition } from 'react';
+import { useBlocosPagination } from '@/hook/useBlocosPagination';
 
 export default function FeedPage() {
-  const [cidade, setCidade] = useState('');
-  const [state, fetchPage, pending] = useActionState(PageBlocos, {
-    error: false,
-    blocos: [],
-    page: 1,
-  });
-
-  useEffect(() => {
-    startTransition(() => {
-      const formData = new FormData();
-      formData.append('page', '1');
-      fetchPage(formData);
-    });
-  }, [fetchPage]);
+  const { cidade, setCidade, state, fetchPage, pending } = useBlocosPagination();
 
   const fetchCityBlocos = (city: string) => {
     const formData = new FormData();
@@ -32,7 +20,6 @@ export default function FeedPage() {
       }
     });
   };
-
 
   const handleSearch = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -97,7 +84,8 @@ export default function FeedPage() {
             'Rio de Janeiro',
             'Belo Horizonte',
             'Salvador',
-            'Recife e Olinda',
+            'Recife',
+            'Olinda',
             'Brasília',
             'Fortaleza',
             'Porto Alegre',

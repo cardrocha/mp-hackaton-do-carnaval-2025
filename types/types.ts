@@ -10,3 +10,19 @@ export interface Bloquinho {
   price: string; 
   event_url: string;
 }
+
+export interface PageState  {
+  error: boolean;
+  message?: string;
+  blocos: Bloquinho[];
+  page: number;
+};
+
+export interface BlocoType {
+  blocos: Bloquinho[]
+}
+
+export interface FeedListProps {
+  blocos: Bloquinho[];
+  onUpdateBlocos: (formData: FormData) => void;
+}

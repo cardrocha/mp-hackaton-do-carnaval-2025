@@ -1,17 +1,6 @@
 "use server";
 
-import type { Bloquinho } from "@/types/types";
-
-interface PageState  {
-  error: boolean;
-  message?: string;
-  blocos: Bloquinho[];
-  page: number;
-};
-
-interface BlocoType {
-  blocos: Bloquinho[]
-}
+import type { BlocoType, PageState } from "@/types/types";
 
 export async function PageBlocos(prevState: PageState, formData: FormData) {
   const page = Number.parseInt(formData.get("page") as string) || 1;
